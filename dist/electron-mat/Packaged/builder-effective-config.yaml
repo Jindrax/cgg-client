@@ -1,0 +1,7 @@
+directories:
+  output: 'D:\Programacion\GamerGarage\cgg\dist\electron-mat\Packaged'
+  buildResources: 'D:\Programacion\GamerGarage\cgg\src-electron'
+  app: 'D:\Programacion\GamerGarage\cgg\dist\electron-mat\UnPackaged'
+appId: cgg_client
+productName: Club Gamer Garage
+electronVersion: 2.0.0
