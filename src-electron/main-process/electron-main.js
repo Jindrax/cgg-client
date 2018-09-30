@@ -2,7 +2,8 @@ import {
   app,
   BrowserWindow,
   screen,
-  ipcMain
+  ipcMain,
+  Notification
 } from 'electron'
 const settings = require('electron-settings');
 
@@ -17,9 +18,10 @@ if (process.env.PROD) {
 let mainWindow
 let logged = false;
 let timer = null;
+let closable = false;
 
-function watcher(){
-  mainWindow.setFullScreen(true)
+function watcher() {
+  //mainWindow.setFullScreen(true)
   mainWindow.focus()
   mainWindow.show()
   timer = setTimeout(watcher, 200)
@@ -30,24 +32,35 @@ function createWindow() {
    * Initial window options
    */
 
+
   const {
     width,
     height
   } = screen.getPrimaryDisplay().workAreaSize
 
+  let not = new Notification({
+    title: 'Path to exe',
+    body: app.getPath("exe")
+  })
+
+  not.show()
+
+  /*var Key = require('windows-registry').Key
+  var windef = require('windows-registry').windef
+
+  var key = new Key(windef.HKEY.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run', windef.KEY_ACCESS.KEY_ALL_ACCESS)
+  key.setValue('CGG Cliente', windef.REG_VALUE_TYPE.REG_SZ, 'app.getPath("exe")')*/
+
   mainWindow = new BrowserWindow({
     width: 300,
     height: 150,
     useContentSize: true,
-    //modificado por pruebas
     alwaysOnTop: true,
     frame: false,
     minimizable: false,
     closable: false,
-    //modificado por pruebas
     skipTaskbar: true,
-    resizable: false,
-    fullscreen: true
+    resizable: false
   })
 
   mainWindow.maximize();
@@ -55,8 +68,8 @@ function createWindow() {
   mainWindow.loadURL(process.env.APP_URL)
 
   mainWindow.on('close', (event) => {
-    if (!allowed) {
-      event.preventDefault();
+    if (!closable) {
+      event.preventDefault()
     }
   })
 
@@ -67,7 +80,7 @@ function createWindow() {
   timer = setTimeout(watcher, 200)
 }
 
-app.setAppUserModelId('cgg_client');
+app.setAppUserModelId('com.jindrax.cgg.client');
 
 app.on('ready', createWindow)
 
@@ -84,10 +97,9 @@ app.on('activate', () => {
 })
 
 ipcMain.on('log_in', (event) => {
-  if(timer){
+  if (timer) {
     clearTimeout(timer)
   }
-  console.log('Permiso para cerrar otorgado')
   logged = true
   mainWindow.unmaximize()
   mainWindow.setSize(300, 150)
@@ -99,13 +111,10 @@ ipcMain.on('log_in', (event) => {
 })
 
 ipcMain.on('log_out', (event) => {
-  console.log('Permiso para cerrar denegado')
   logged = false
   mainWindow.center()
-  //modificado por pruebas
   mainWindow.setAlwaysOnTop(true)
   mainWindow.setMovable(false)
-  //modificado por pruebas
   mainWindow.setSkipTaskbar(true)
   mainWindow.maximize()
   mainWindow.maximize()
@@ -122,4 +131,9 @@ ipcMain.on('getSettings', (event) => {
 ipcMain.on('setSettings', (event, setting) => {
   settings.set('settings', setting);
   event.sender.send('settings_set', settings);
+})
+
+ipcMain.on('close', (event) => {
+  closable = true
+  app.exit(0)
 })

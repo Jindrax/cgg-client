@@ -14,7 +14,7 @@ import { Duration } from "luxon";
 import { clearInterval, setInterval, clearTimeout } from "timers";
 export default {
   name: "Sesion",
-  props: ["sesion", "socket"],
+  props: ["sesion", "socket", "username", "equipo"],
   data() {
     return {
       timer: null,
@@ -29,24 +29,31 @@ export default {
     }
   },
   mounted() {
-    this.consume();
+    if (this.sesion != 0) {
+      this.consume();
+    }
   },
   methods: {
     logout: function() {
-      this.socket.post(
-        "/logout",
-        {
-          sesion: this.sesion
-        },
-        (response, jwRes) => {
-          if (jwRes.statusCode != 200) {
-            this.$q.notify(response);
-          } else {
+      let sesion = {
+        sesion: this.sesion
+      };
+      if (this.sesion == 0) {
+        sesion.sesion = {
+          username: this.username,
+          equipo: this.equipo
+        };
+      }
+      this.socket.post("/logout", sesion, (response, jwRes) => {
+        if (jwRes.statusCode != 200) {
+          this.$q.notify(response);
+        } else {
+          if (this.sesion != 0) {
             clearTimeout(this.timer);
-            this.$q.electron.ipcRenderer.send("log_out");
           }
+          this.$q.electron.ipcRenderer.send("log_out");
         }
-      );
+      });
     },
     consume: function() {
       this.socket.post(

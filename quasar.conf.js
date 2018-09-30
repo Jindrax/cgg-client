@@ -129,7 +129,11 @@ module.exports = function (ctx) {
       },
       builder: {
         // https://www.electron.build/configuration/configuration
-        appId: 'cgg_client'
+        appId: 'com.jindrax.cgg.client',
+        productName: 'CGG Cliente',
+        win: {
+          icon: 'cgg.ico'
+        }
       }
     }
   }

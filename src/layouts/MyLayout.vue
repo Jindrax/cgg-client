@@ -16,12 +16,13 @@
         </q-field>
         <q-btn icon="ion-log-in" v-if="unlogged" flat dense round @click="login" class="q-mx-sm nodrag" />
         <q-btn icon="ion-log-out" v-if="!unlogged" flat dense round @click="logout" class="q-mx-sm nodrag" />
+        <q-btn icon="ion-close-circle-outline" v-if="!unlogged && isAdmin" flat dense round @click="close" class="q-mx-sm nodrag" />
       </q-toolbar>
     </q-layout-header>
     <q-page-container>
       <q-page class="flex flex-center over" :class="{'bg-black': unlogged}">
         <img v-show="unlogged" alt="Quasar logo" src="~assets/logo.jpg" class="fit over">
-        <sesion v-if="sesion != null && !unlogged" :sesion="sesion" :socket="getSocket()" ref="sesion" />
+        <sesion v-if="sesion != null && !unlogged" :sesion="sesion" :socket="getSocket()" :username="username" :equipo="settings.equipo" ref="sesion" />
       </q-page>
     </q-page-container>
   </q-layout>
@@ -34,7 +35,7 @@ var socketIOClient = require("socket.io-client");
 var sailsIOClient = require("sails.io.js");
 var io = sailsIOClient(socketIOClient);
 io.sails.reconnection = true;
-io.sails.url = "http://192.168.1.5:1337";
+io.sails.url = "http://lanserver:1337";
 
 export default {
   name: "MyLayout",
@@ -46,6 +47,16 @@ export default {
       unlogged: true,
       settings: null
     };
+  },
+  computed:{
+    isAdmin(){
+      if(this.sesion != null){
+        if(this.sesion == 0){
+          return true;
+        }
+      }
+      return false;
+    }
   },
   created() {
     this.$q.electron.ipcRenderer.on("logged_in", event => {
@@ -82,6 +93,9 @@ export default {
   },
   methods: {
     login: function() {
+      if(this.username == 'close' && this.password == 'cGG_1531032816'){
+        this.close();
+      }
       if (this.username == "setEquipo") {
         this.setEquipo(Number(this.password));
       } else {
@@ -122,6 +136,9 @@ export default {
     },
     logout: function() {
       this.$refs.sesion.logout();
+    },
+    close: function(){
+      this.$q.electron.ipcRenderer.send("close");
     }
   },
   components: {
