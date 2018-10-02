@@ -9,10 +9,10 @@
           {{username}}
         </q-toolbar-title>
         <q-field v-show="unlogged" class="text-black q-mx-sm q-px-xs">
-          <q-input v-model="username" placeholder="Nombre de usuario" dark/>
+          <q-input v-model="username" placeholder="Nombre de usuario" dark />
         </q-field>
         <q-field v-show="unlogged" class="text-black q-mx-sm q-px-xs">
-          <q-input v-model="password" placeholder="Contraseña" dark type="password" no-pass-toggle/>
+          <q-input v-model="password" placeholder="Contraseña" dark type="password" no-pass-toggle />
         </q-field>
         <q-btn icon="ion-log-in" v-if="unlogged" flat dense round @click="login" class="q-mx-sm nodrag" />
         <q-btn icon="ion-log-out" v-if="!unlogged" flat dense round @click="logout" class="q-mx-sm nodrag" />
@@ -25,6 +25,58 @@
         <sesion v-if="sesion != null && !unlogged" :sesion="sesion" :socket="getSocket()" :username="username" :equipo="settings.equipo" ref="sesion" />
       </q-page>
     </q-page-container>
+    <q-modal v-model="opened">
+      <q-modal-layout>
+        <q-toolbar slot="header">
+          <q-btn flat round dense v-close-overlay icon="keyboard_arrow_left" />
+          <q-toolbar-title>
+            Información Adicional
+          </q-toolbar-title>
+        </q-toolbar>
+        <q-card>
+          <q-card-title>
+            Llene la información para iniciar sesion
+          </q-card-title>
+          <q-card-separator />
+          <q-card-main>
+            <div class="row">
+              <q-field label="Nombres" style="width: 100%">
+                <q-input v-model="info.nombres" />
+              </q-field>
+            </div>
+            <div class="row">
+              <q-field label="Apellidos" style="width: 100%">
+                <q-input v-model="info.apellidos" />
+              </q-field>
+            </div>
+            <div class="row">
+              <q-field label="E-mail" style="width: 100%">
+                <q-input v-model="info.email" />
+              </q-field>
+            </div>
+            <div class="row">
+              <q-field label="Telefono" style="width: 100%">
+                <q-input v-model="info.telefono" />
+              </q-field>
+            </div>
+            <div class="row">
+              <q-field label="Fecha de nacimiento" style="width: 100%">
+                <q-datetime v-model="info.nacimiento" float-label="Inicio" format-model="number" />
+              </q-field>
+            </div>
+            <br>
+            <div class="row">
+              <q-btn label="Guardar" style="width: 100%" @click="sendInfo" color="primary" />
+            </div>
+          </q-card-main>
+        </q-card>
+        <q-toolbar slot="footer">
+          <q-toolbar-title>
+            El tiempo de la sesion no inicia hasta que complete esta información
+          </q-toolbar-title>
+        </q-toolbar>
+      </q-modal-layout>
+    </q-modal>
   </q-layout>
 </template>
 
@@ -41,17 +93,26 @@ export default {
   name: "MyLayout",
   data() {
     return {
+      opened: false,
       sesion: null,
       username: "",
       password: "",
       unlogged: true,
-      settings: null
+      settings: null,
+      info: {
+        id: "",
+        nombres: "",
+        apellidos: "",
+        email: "",
+        telefono: "",
+        nacimiento: null
+      }
     };
   },
-  computed:{
-    isAdmin(){
-      if(this.sesion != null){
-        if(this.sesion == 0){
+  computed: {
+    isAdmin() {
+      if (this.sesion != null) {
+        if (this.sesion == 0) {
           return true;
         }
       }
@@ -93,8 +154,9 @@ export default {
   },
   methods: {
     login: function() {
-      if(this.username == 'close' && this.password == 'cGG_1531032816'){
+      if (this.username == "close" && this.password == "cGG_1531032816") {
         this.close();
+        return;
       }
       if (this.username == "setEquipo") {
         this.setEquipo(Number(this.password));
@@ -107,11 +169,14 @@ export default {
             equipo: this.settings.equipo
           },
           (response, jwRes) => {
-            if (jwRes.statusCode != 200) {
-              this.$q.notify(response);
-            } else {
+            if (jwRes.statusCode == 200) {
               this.sesion = response;
               this.$q.electron.ipcRenderer.send("log_in");
+            } else if (jwRes.statusCode == 206) {
+              this.info.id = response;
+              this.opened = true;
+            } else {
+              this.$q.notify(response);
             }
           }
         );
@@ -137,8 +202,32 @@ export default {
     logout: function() {
       this.$refs.sesion.logout();
     },
-    close: function(){
+    close: function() {
       this.$q.electron.ipcRenderer.send("close");
+    },
+    sendInfo: function() {
+      io.socket.post(
+        "/saveinfo",
+        {
+          info: this.info
+        },
+        (response, jwRes) => {
+          if (jwRes.statusCode == 200) {
+            this.info = {
+              id: "",
+              nombres: "",
+              apellidos: "",
+              email: "",
+              telefono: "",
+              nacimiento: null
+            };
+            this.opened = false;
+            this.login();            
+          } else {
+            this.$q.notify(response);
+          }
+        }
+      );
     }
   },
   components: {

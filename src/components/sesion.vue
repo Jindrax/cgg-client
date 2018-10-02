@@ -35,25 +35,23 @@ export default {
   },
   methods: {
     logout: function() {
-      let sesion = {
-        sesion: this.sesion
-      };
-      if (this.sesion == 0) {
-        sesion.sesion = {
-          username: this.username,
-          equipo: this.equipo
-        };
-      }
-      this.socket.post("/logout", sesion, (response, jwRes) => {
-        if (jwRes.statusCode != 200) {
-          this.$q.notify(response);
-        } else {
-          if (this.sesion != 0) {
-            clearTimeout(this.timer);
+      this.socket.post(
+        "/logout",
+        {
+          sesion: this.sesion
+        },
+        (response, jwRes) => {
+          if (jwRes.statusCode != 200) {
+            this.$q.notify(response);
+          } else {
+            if (this.sesion != 0) {
+              clearTimeout(this.timer);
+            }
+            this.$q.electron.ipcRenderer.send("log_out");
           }
-          this.$q.electron.ipcRenderer.send("log_out");
+          this.$q.notify(response);
         }
-      });
+      );
     },
     consume: function() {
       this.socket.post(

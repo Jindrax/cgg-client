@@ -11,7 +11,7 @@
 
 import Vue from 'vue'
 
-import {Quasar,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QItem,QItemMain,QItemSide,QField,QInput,Ripple,Notify} from 'quasar'
+import {Quasar,QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QItem,QItemMain,QItemSide,QField,QInput,QModal,QDatetime,QCard,QCardTitle,QCardMain,QCardMedia,QCardSeparator,QCardActions,Ripple,CloseOverlay,Notify} from 'quasar'
 
 
-Vue.use(Quasar, { config: {},components: {QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QItem,QItemMain,QItemSide,QField,QInput},directives: {Ripple},plugins: {Notify} })
+Vue.use(Quasar, { config: {},components: {QLayout,QLayoutHeader,QLayoutDrawer,QPageContainer,QPage,QToolbar,QToolbarTitle,QBtn,QIcon,QList,QListHeader,QItem,QItemMain,QItemSide,QField,QInput,QModal,QDatetime,QCard,QCardTitle,QCardMain,QCardMedia,QCardSeparator,QCardActions},directives: {Ripple,CloseOverlay},plugins: {Notify} })

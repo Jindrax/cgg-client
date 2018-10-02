@@ -28,29 +28,10 @@ function watcher() {
 }
 
 function createWindow() {
-  /**
-   * Initial window options
-   */
-
-
   const {
     width,
     height
   } = screen.getPrimaryDisplay().workAreaSize
-
-  let not = new Notification({
-    title: 'Path to exe',
-    body: app.getPath("exe")
-  })
-
-  not.show()
-
-  /*var Key = require('windows-registry').Key
-  var windef = require('windows-registry').windef
-
-  var key = new Key(windef.HKEY.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run', windef.KEY_ACCESS.KEY_ALL_ACCESS)
-  key.setValue('CGG Cliente', windef.REG_VALUE_TYPE.REG_SZ, 'app.getPath("exe")')*/
-
   mainWindow = new BrowserWindow({
     width: 300,
     height: 150,
@@ -62,21 +43,16 @@ function createWindow() {
     skipTaskbar: true,
     resizable: false
   })
-
-  mainWindow.maximize();
-
+  mainWindow.maximize()
   mainWindow.loadURL(process.env.APP_URL)
-
   mainWindow.on('close', (event) => {
     if (!closable) {
       event.preventDefault()
     }
   })
-
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-
   timer = setTimeout(watcher, 200)
 }
 

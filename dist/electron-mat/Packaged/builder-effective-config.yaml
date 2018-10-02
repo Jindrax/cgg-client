@@ -3,7 +3,11 @@ directories:
   buildResources: 'D:\Azure\cgg-client\src-electron'
   app: 'D:\Azure\cgg-client\dist\electron-mat\UnPackaged'
 appId: com.jindrax.cgg.client
-productName: CGG Cliente
+productName: CGG
 win:
   icon: cgg.ico
+nsis:
+  runAfterFinish: false
+extraFiles:
+  - startup.bat
 electronVersion: 2.0.0
