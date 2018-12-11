@@ -87,7 +87,7 @@ var socketIOClient = require("socket.io-client");
 var sailsIOClient = require("sails.io.js");
 var io = sailsIOClient(socketIOClient);
 io.sails.reconnection = true;
-io.sails.url = "http://lanserver:1337";
+io.sails.url = "https://cggserver.herokuapp.com/";
 
 export default {
   name: "MyLayout",

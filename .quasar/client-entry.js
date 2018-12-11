@@ -33,6 +33,8 @@ import createApp from './app.js'
 
 import pAxios from 'src/plugins/axios'
 
+import pVuelidate from 'src/plugins/vuelidate'
+
 
 
 
@@ -61,7 +63,7 @@ const { app, router } = createApp()
 
 
 
-;[pAxios].forEach(plugin => {
+;[pAxios,pVuelidate].forEach(plugin => {
   plugin({
     app,
     router,
