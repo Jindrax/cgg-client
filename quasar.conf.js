@@ -20,6 +20,13 @@ module.exports = function (ctx) {
     supportIE: false,
     build: {
       scopeHoisting: true,
+      env: ctx.dev ? {
+        MASTER_PASS: JSON.stringify('123456'),
+        API_URL: JSON.stringify('http://localhost:1337/')
+        } : {
+        MASTER_PASS: JSON.stringify('cGG_1531032816'),
+        API_URL: JSON.stringify('https://cggserver.herokuapp.com/')
+      },
       // vueRouterMode: 'history',
       // vueCompiler: true,
       // gzip: true,
@@ -58,7 +65,8 @@ module.exports = function (ctx) {
         'QCardMain',
         'QCardMedia',
         'QCardSeparator',
-        'QCardActions'
+        'QCardActions',
+        'QModalLayout'
       ],
       directives: [
         'Ripple',
