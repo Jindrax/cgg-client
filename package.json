@@ -1,6 +1,6 @@
 {
   "name": "cgg",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Cliente para el sistema de administracion del club Gamer Garage",
   "productName": "Club Gamer Garage",
   "cordovaId": "org.cordova.quasar.app",

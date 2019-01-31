@@ -167,6 +167,10 @@ export default {
         this.segundos -= 1;
         this.timer_segundos = setTimeout(this.calcular_segundos, 1000);
       }
+    },
+    liberar_tempo: function () {
+      clearTimeout(this.timer);
+      clearTimeout(this.timer_segundos);
     }
   }
 };
