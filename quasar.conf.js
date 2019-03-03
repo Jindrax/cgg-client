@@ -20,7 +20,8 @@ module.exports = function (ctx) {
     supportIE: false,
     build: {
       scopeHoisting: true,
-      env: ctx.dev ? {
+      //ctx.dev
+      env: false ? {
         MASTER_PASS: JSON.stringify('123456'),
         API_URL: JSON.stringify('http://localhost:1337/')
         } : {

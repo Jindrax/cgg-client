@@ -41,6 +41,9 @@
     </q-layout-header>
     <q-page-container>
       <q-page class="flex flex-center over" :class="{'bg-black': unlogged}">
+        <div style="color: red" class="fixed-right fixed-bottom float-right">
+          Version: XXXXXXXX
+        </div>
         <img v-show="unlogged" alt="Quasar logo" src="~assets/logo.jpg" class="fit over">
         <sesion
           v-if="sesion != null && !unlogged"
@@ -188,6 +191,7 @@ export default {
     this.$q.electron.ipcRenderer.send("getSettings");
   },
   mounted() {
+    console.log('env: ', process);
     //Una vez lista la interfaz de la aplicacion se escucha el evento de conexion
     io.socket.on("connect", () => {
       //Cuando el cliente ya esta conectado se registra ante el servidor

@@ -1,7 +1,7 @@
 directories:
-  output: 'D:\Azure\cgg-client\dist\electron-mat\Packaged'
-  buildResources: 'D:\Azure\cgg-client\src-electron'
-  app: 'D:\Azure\cgg-client\dist\electron-mat\UnPackaged'
+  output: 'D:\Repos\CGG\cgg-client\dist\electron-mat\Packaged'
+  buildResources: 'D:\Repos\CGG\cgg-client\src-electron'
+  app: 'D:\Repos\CGG\cgg-client\dist\electron-mat\UnPackaged'
 appId: com.jindrax.cgg.client
 productName: CGG
 win:
