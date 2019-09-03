@@ -23,10 +23,10 @@ module.exports = function (ctx) {
       //ctx.dev
       env: false ? {
         MASTER_PASS: JSON.stringify('123456'),
-        API_URL: JSON.stringify('http://localhost:1337/')
+        API_URL: JSON.stringify('http://192.168.1.50:1337/')
         } : {
-        MASTER_PASS: JSON.stringify('cGG_1531032816'),
-        API_URL: JSON.stringify('https://cggserver.herokuapp.com/')
+        MASTER_PASS: JSON.stringify('cGG_wsjsj'),
+        API_URL: JSON.stringify('http://192.168.1.50:1337/')
       },
       // vueRouterMode: 'history',
       // vueCompiler: true,
